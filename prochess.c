@@ -25,7 +25,7 @@
  */
 
 /* EASY */
-/*
+
 #define SO_NUM_G 2
 #define SO_NUM_P 10
 #define SO_MAX_TIME 3
@@ -36,11 +36,10 @@
 #define SO_ROUND_SCORE 10
 #define SO_N_MOVES 20
 #define SO_MIN_HOLD_NSEC 100000000
- */
 
 
 /* HARD */
-
+/*
 #define SO_NUM_G 4
 #define SO_NUM_P 400
 #define SO_MAX_TIME 1
@@ -51,8 +50,7 @@
 #define SO_ROUND_SCORE 200
 #define SO_N_MOVES 200
 #define SO_MIN_HOLD_NSEC 100000000
-
-
+*/
 
 unsigned int ready_players, current_placing_player, current_round, total_playing_time, conquered_flags, flag_count;
 player_t player_list[SO_NUM_G];
