@@ -17,7 +17,7 @@ int generate_message_queue(){
     int message_queue_id;
 
     /* Allocate a new message queue. */
-    message_queue_id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);
+    message_queue_id = msgget(IPC_PRIVATE, IPC_EXCL | IPC_CREAT | 0600);
     if ( message_queue_id == -1 ) {
         printf("Cannot initialize a new message queue, aborting.\n");
         printf("Reported error: %s.\n", strerror(errno));
@@ -40,9 +40,10 @@ void send_message(int mq_id, message_t* msg){
     size = strlen(msg->payload) + 1;
     /* Send the message. */
     result = msgsnd(mq_id, msg, size, 0);
-    if ( result == -1 ){
-        printf("Cannot send the message, aborting.\n");
+    if ( result == -1 && errno != EEXIST ){
+        printf("Cannot send the message, aborting (%d).\n", msg->message_type);
         printf("Reported error: %s.\n", strerror(errno));
+
         exit(4);
     }
 }

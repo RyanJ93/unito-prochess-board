@@ -80,11 +80,13 @@ int main() {
     /* Setup the signal handler used to handle SIGALRM whenever a timer expire. */
     signal(SIGALRM, signal_handler);
     printf("Spawning players...\n");
-    /*  */
+    /* Spawn the players' processes. */
     spawn_players(player_list, game_board_shm_id, SO_NUM_G, SO_NUM_P, SO_N_MOVES);
     if ( game_board->coordinator_pid == getpid() ){
         printf("Spawned %d players.\n", SO_NUM_G);
+        /* Start listening for incoming messages. */
         while (1){
+            /* Pull a message from the message queue. */
             message = receive_message(game_board->coordinator_mq_id);
             handle_message(&message);
         }
@@ -166,6 +168,7 @@ void exec_round(){
     printf("Starting a new round!\n");
     conquered_flags = 0;
     current_round++;
+    game_board->round_in_progress = 1;
     /* Spawn a random number of flags on the game board. */
     flag_count = spawn_flags(game_board, SO_FLAG_MIN, SO_FLAG_MAX, SO_ROUND_SCORE);
     printf("Spawned %d flags.\n", flag_count);
@@ -192,6 +195,7 @@ void signal_handler(int signo){
  * Ends current round.
  */
 void end_round(){
+    game_board->round_in_progress = 0;
     /* Update the score counter for each player. */
     update_players_score(game_board, player_list, SO_NUM_G, 1);
     total_playing_time += time(NULL) - round_start_time;

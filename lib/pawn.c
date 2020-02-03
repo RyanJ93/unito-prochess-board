@@ -102,10 +102,13 @@ void signal_achievement(board_t* game_board, char player_pseudo_name){
 void notify_movement(board_t* game_board, char player_pseudo_name){
     message_t message;
 
-    /* Create the message. */
-    message.message_type = 10;
-    message.player_pseudo_name = player_pseudo_name;
-    send_message(game_board->coordinator_mq_id, &message);
+    if ( game_board->round_in_progress == 1 ){
+        /* Create the message. */
+        message.message_type = 10;
+        message.player_pseudo_name = player_pseudo_name;
+        send_message(game_board->coordinator_mq_id, &message);
+    }
+
 }
 
 /**
@@ -149,6 +152,9 @@ pawn_t spawn_pawn(board_t* game_board, char player_pseudo_name, int game_board_s
             switch ( message.message_type ){
                 case 8: {
                     while ( available_moves > 0 ){
+                        if ( game_board->round_in_progress != 1 ){
+                            break;
+                        }
                         /* Get the position where the pawn should be moved to. */
                         next_position = get_next_position(local_game_board, &position);
                         /* Move the pawn and check if a flag is present in its new position. */

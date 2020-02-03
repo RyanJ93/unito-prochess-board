@@ -8,9 +8,7 @@
 #include <semaphore.h>
 #include <pthread.h>
 #include <sys/shm.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
-#include <sys/sem.h>
 
 #if __APPLE__
     #include <limits.h>
@@ -134,7 +132,7 @@ int generate_board(int width, int height){
     game_board->height = height;
     game_board->coordinator_mq_id = generate_message_queue();
     game_board->coordinator_pid = getpid();
-    game_board->waiting_time = 0;
+    game_board->waiting_time = game_board->round_in_progress = 0;
     /* Initialize each board cell. */
     for ( x = 0 ; x < width ; x++ ){
         for ( y = 0 ; y < height ; y++ ){

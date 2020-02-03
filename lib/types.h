@@ -39,6 +39,7 @@ typedef struct {
     int coordinator_mq_id;
     long waiting_time;
     pid_t coordinator_pid;
+    boolean round_in_progress;
     cell_t cells[];
 } board_t;
 
